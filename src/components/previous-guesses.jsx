@@ -1,8 +1,14 @@
 import React from "react";
+import { percentage } from "../helpers";
 import { colors } from "../theme/colors";
 
 const PreviousGuesses = ({ guesses }) => {
-  const slicedResults = guesses.slice(-10);
+  const lastGuesses = guesses.slice(-10);
+  const percentCorrect = percentage(
+    lastGuesses.filter((g) => g.correct).length,
+    lastGuesses.length
+  );
+
   return (
     <aside
       style={{
@@ -13,8 +19,8 @@ const PreviousGuesses = ({ guesses }) => {
       }}
       className="last5"
     >
-      <h3>Last 10 guesses</h3>
-      {slicedResults.map((r) => (
+      <h3>{`Last 10 guesses (${percentCorrect}%) `}</h3>
+      {lastGuesses.map((r) => (
         <div
           key={r.poke}
           style={{

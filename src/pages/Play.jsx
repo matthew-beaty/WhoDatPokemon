@@ -3,10 +3,16 @@ import { getRandomPokeNum, getPokeUrl } from "../helpers";
 import PreviousGuesses from "../components/previous-guesses";
 import Stats from "../components/stats";
 
+import Fuse from "fuse.js";
+
 const RevealStates = {
   Unplayed: "Unplayed",
   Correct: "Correct",
   Incorrect: "Incorrect",
+};
+
+const settings = {
+  fuzzyMatch: false,
 };
 
 export default function Play(props) {
@@ -35,15 +41,7 @@ export default function Play(props) {
 
   const onChange = (e) => {
     const val = e.target.value;
-
     setInputValue(val);
-
-    if (val === currentPoke.name) {
-      setRevealPoke(RevealStates.Correct);
-      setStreak(streak + 1);
-      setCorrectTotal(correctTotal + 1);
-      setGuesses([...guesses, { poke: currentPoke.name, correct: true }]);
-    }
   };
 
   const nextPoke = () => {
@@ -60,6 +58,38 @@ export default function Play(props) {
     setStreak(0);
     setIncorrectTotal(incorrectTotal + 1);
     setGuesses([...guesses, { poke: currentPoke.name, correct: false }]);
+  };
+
+  const guess = (e) => {
+    e.preventDefault();
+
+    let isFuzzyMatch = false;
+
+    // For fuzzy match
+    if (settings.fuzzyMatch) {
+      const fuse = new Fuse([currentPoke.name], { threshold: 0.2 });
+      const result = fuse.search(inputValue);
+
+      if (
+        Math.abs(inputValue.length - currentPoke.name.length) <= 2 &&
+        result.length > 0
+      )
+        isFuzzyMatch = true;
+    }
+
+    const isCorrect = settings.fuzzyMatch
+      ? isFuzzyMatch
+      : inputValue === currentPoke.name;
+
+    // Guess
+    if (isCorrect) {
+      setRevealPoke(RevealStates.Correct);
+      setStreak(streak + 1);
+      setCorrectTotal(correctTotal + 1);
+      setGuesses([...guesses, { poke: currentPoke.name, correct: true }]);
+    } else {
+      giveUp();
+    }
   };
 
   return (
@@ -94,18 +124,19 @@ export default function Play(props) {
           )}
 
           {revealPoke === RevealStates.Unplayed && (
-            <div>
+            <form onSubmit={guess}>
               <input
                 autoFocus
                 type="text"
                 value={inputValue}
                 onChange={onChange}
                 onKeyUp={(e) => {
-                  if (e.key === "Enter") giveUp();
+                  if (e.key === "Enter") guess(e);
                 }}
                 disabled={revealPoke !== RevealStates.Unplayed}
               ></input>
-            </div>
+              <button onClick={guess}>Guess</button>
+            </form>
           )}
 
           {revealPoke === RevealStates.Correct && (

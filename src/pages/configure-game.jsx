@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
 import Toggle from "../components/toggle";
 
@@ -8,15 +9,11 @@ const formDefault = {
   timed: false,
 };
 
-const Setting = ({ children }) => (
-  <div style={{ display: "flex", justifyContent: "space-between" }}>
-    {children}
-  </div>
-);
-
 const ConfigureGame = () => {
   const [form, setForm] = React.useState(formDefault);
   const { shuffle, timed, exactMatch } = form;
+
+  const navigate = useNavigate();
 
   const toggleSetting = ({ target }) => {
     const { name } = target;
@@ -27,6 +24,8 @@ const ConfigureGame = () => {
 
   const submit = (e) => {
     e.preventDefault();
+
+    navigate("/play");
   };
 
   return (
@@ -36,32 +35,26 @@ const ConfigureGame = () => {
         <form
           style={{ width: "300px", display: "flex", flexDirection: "column" }}
         >
-          <Setting>
-            Require exact match:
-            <Toggle
-              name="exactMatch"
-              checked={exactMatch}
-              onChange={toggleSetting}
-            ></Toggle>
-          </Setting>
+          <Toggle
+            text="Require exact match:"
+            name="exactMatch"
+            checked={exactMatch}
+            onChange={toggleSetting}
+          />
 
-          <Setting>
-            Shuffle:
-            <Toggle
-              name="shuffle"
-              checked={shuffle}
-              onChange={toggleSetting}
-            ></Toggle>
-          </Setting>
+          <Toggle
+            text="Shuffle:"
+            name="shuffle"
+            checked={shuffle}
+            onChange={toggleSetting}
+          />
 
-          <Setting>
-            Timed:
-            <Toggle
-              name="timed"
-              checked={timed}
-              onChange={toggleSetting}
-            ></Toggle>
-          </Setting>
+          <Toggle
+            text="Timed:"
+            name="timed"
+            checked={timed}
+            onChange={toggleSetting}
+          />
 
           <button onClick={submit}>Lets play!</button>
         </form>

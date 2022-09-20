@@ -16,10 +16,10 @@ const Stats = ({ streak, correctTotal, incorrectTotal }) => {
       <div>Total Correct: {correctTotal}</div>
       <div>Total Incorrect: {incorrectTotal}</div>
       <div>
-        {`Guess Rate: .${percentage(
+        {`Guess Rate: ${percentage(
           correctTotal,
           correctTotal + incorrectTotal
-        )}`}
+        )}%`}
       </div>
     </aside>
   );
