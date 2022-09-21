@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Button, Input } from "semantic-ui-react";
 
 export default function Login(props) {
   const [name, setName] = useState("");
@@ -21,13 +22,13 @@ export default function Login(props) {
     <div>
       <h1>login, my dude</h1>
       <div>
-        <input placeholder="name" onChange={nameHandler} value={name} />
-        <input
+        <Input placeholder="name" onChange={nameHandler} value={name} />
+        <Input
           placeholder="password"
           onChange={passwordHandler}
           value={password}
         />
-        <button onClick={submit}>Login</button>
+        <Button onClick={submit}>Login</Button>
       </div>
       <Link to="configure"> play, anyway</Link>
     </div>

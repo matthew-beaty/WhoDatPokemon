@@ -2,6 +2,7 @@ import React from "react";
 import { getRandomPokeNum, getPokeUrl } from "../helpers";
 import PreviousGuesses from "../components/previous-guesses";
 import Stats from "../components/stats";
+import { Button, Input } from "semantic-ui-react";
 
 import Fuse from "fuse.js";
 
@@ -125,8 +126,9 @@ export default function Play(props) {
 
           {revealPoke === RevealStates.Unplayed && (
             <form onSubmit={guess}>
-              <input
+              <Input
                 autoFocus
+                action="Guess"
                 type="text"
                 value={inputValue}
                 onChange={onChange}
@@ -134,22 +136,21 @@ export default function Play(props) {
                   if (e.key === "Enter") guess(e);
                 }}
                 disabled={revealPoke !== RevealStates.Unplayed}
-              ></input>
-              <button onClick={guess}>Guess</button>
+              ></Input>
             </form>
           )}
 
           {revealPoke === RevealStates.Correct && (
             <>
               <h2>That's right! It's {currentPoke.name}!</h2>
-              <button onClick={nextPoke}>Next pokemon</button>
+              <Button onClick={nextPoke}>Next pokemon</Button>
             </>
           )}
 
           {revealPoke === RevealStates.Incorrect && (
             <>
               <h2>Good try! It's {currentPoke.name}!</h2>
-              <button
+              <Button
                 autofocus
                 ref={(button) => {
                   textInput = button;
@@ -157,13 +158,13 @@ export default function Play(props) {
                 onClick={nextPoke}
               >
                 Next pokemon
-              </button>
+              </Button>
             </>
           )}
 
           <div>
             {revealPoke === RevealStates.Unplayed && (
-              <button onClick={giveUp}>IDK, who is it?!</button>
+              <Button onClick={giveUp}>IDK, who is it?!</Button>
             )}
           </div>
         </div>

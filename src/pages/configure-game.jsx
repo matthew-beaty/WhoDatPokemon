@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router";
-
-import Toggle from "../components/toggle";
+import { Checkbox, Card } from "semantic-ui-react";
+import { colors } from "../theme/colors";
 
 const formDefault = {
   exactMatch: false,
@@ -9,14 +9,25 @@ const formDefault = {
   timed: false,
 };
 
+const Row = ({ children }) => (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      marginBottom: "8px",
+    }}
+  >
+    {children}
+  </div>
+);
+
 const ConfigureGame = () => {
   const [form, setForm] = React.useState(formDefault);
   const { shuffle, timed, exactMatch } = form;
 
   const navigate = useNavigate();
 
-  const toggleSetting = ({ target }) => {
-    const { name } = target;
+  const toggleSetting = (name) => {
     const value = form[name];
 
     setForm({ ...form, [name]: !value });
@@ -32,32 +43,64 @@ const ConfigureGame = () => {
     <main>
       <h1>Game Settings</h1>
       <section style={{ display: "flex", justifyContent: "center" }}>
-        <form
-          style={{ width: "300px", display: "flex", flexDirection: "column" }}
+        <Card
+          as="form"
+          style={{
+            width: "300px",
+            display: "flex",
+            flexDirection: "column",
+            padding: "20px",
+            border: `8px solid ${colors.pokeBlue}`,
+          }}
         >
-          <Toggle
-            text="Require exact match:"
-            name="exactMatch"
-            checked={exactMatch}
-            onChange={toggleSetting}
-          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "8px",
+            }}
+          >
+            <label htmlFor="exactMatch">Require exact match:</label>
+            <Checkbox
+              toggle
+              id="exactMatch"
+              checked={exactMatch}
+              onClick={() => toggleSetting("exactMatch")}
+            />
+          </div>
 
-          <Toggle
-            text="Shuffle:"
-            name="shuffle"
-            checked={shuffle}
-            onChange={toggleSetting}
-          />
-
-          <Toggle
-            text="Timed:"
-            name="timed"
-            checked={timed}
-            onChange={toggleSetting}
-          />
-
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "8px",
+            }}
+          >
+            <label htmlFor="shuffle">Shuffle:</label>
+            <Checkbox
+              toggle
+              id="shuffle"
+              checked={shuffle}
+              onClick={() => toggleSetting("shuffle")}
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "8px",
+            }}
+          >
+            <label htmlFor="timed">Timed:</label>
+            <Checkbox
+              toggle
+              id="timed"
+              checked={timed}
+              onClick={() => toggleSetting("timed")}
+            />
+          </div>
           <button onClick={submit}>Lets play!</button>
-        </form>
+        </Card>
       </section>
     </main>
   );
